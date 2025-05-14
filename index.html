@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Color and Number Predictor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      position: relative;
+      background: #0f0f0f;
+      color: white;
+    }
+
+    canvas#bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      text-align: center;
+      background: linear-gradient(90deg, #00ffe1, #ff00b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+  width: 100px;
+  height: 100px;
+  background: url('logo.png') no-repeat center;
+  background-size: cover;
+  border-radius: 50%;
+  margin-bottom: 25px;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4); /* Light shadow for a glowing effect */
+  border: 5px solid #00ffb3; /* Green border around the logo */
+  transition: all 0.3s ease-in-out; /* Smooth transition for hover effect */
+}
+
+.logo:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 179, 0.7); /* Hover glow effect */
+  border: 5px solid #00b3ff; /* Hover border color change */
+}
+
+
+    input {
+      width: 100%;
+      max-width: 300px;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 1rem;
+      border: none;
+      outline: none;
+      background: #222;
+      color: #00ffb3;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: inset 0 0 5px #00ffb3;
+    }
+
+
+    button {
+      width: 100%;
+      max-width: 300px;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, #00ffc3, #00b3ff);
+      color: #000;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(0,255,200,0.5);
+    }
+
+    /* Same button style as Result button */
+.button-container {
+  display: flex;
+  flex-direction: column;  /* Stack buttons vertically */
+  gap: 20px; /* Space between the buttons */
+  margin-top: 40px; /* Space from the result button */
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  width: 100%;
+  max-width: 300px;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #00ffc3, #00b3ff);
+  color: #000;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0,255,200,0.5);
+}
+
+/* Register Button Custom Style */
+.register-button {
+  background: linear-gradient(90deg, #00b3ff, #00ffb3);
+  border: 2px solid #00ff99;
+}
+
+.register-button:hover {
+  background: linear-gradient(90deg, #00ff99, #00ccff);
+}
+
+/* Telegram Button Custom Style */
+.telegram-button {
+  background: linear-gradient(90deg, #00b3ff, #00ffb3);
+  border: 2px solid #00ff99;
+}
+
+.telegram-button:hover {
+  background: linear-gradient(90deg, #00ff99, #00ccff);
+}
+
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 260px;
+      max-width: 90%;
+      padding: 20px 30px;
+      border-radius: 15px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+      z-index: 1000;
+      animation: slideIn 0.5s ease-out;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      border: 2px solid transparent;
+    }
+
+    .popup.red {
+      border-color: #ff0000;
+      color: #ff4c4c;
+      box-shadow: 0 0 15px #ff4c4c;
+    }
+
+    .popup.green {
+      border-color: #00ff00;
+      color: #00ff66;
+      box-shadow: 0 0 15px #00ff66;
+    }
+
+    .popup.warning {
+      border-color: #ffaa00;
+      color: #ffaa00;
+      box-shadow: 0 0 15px #ffaa00;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="container">
+  <h1>COLOUR AND NUMBER PREDICTER</h1>
+  <div class="logo"></div>
+
+  <input type="text" id="periodInput" placeholder="Enter Period Number" />
+  <button onclick="showResult()">Result</button>
+
+  <div id="popup" class="popup"></div>
+
+<br><br><br>
+<!-- Register and Telegram Buttons Section -->
+<div class="button-container">
+  <a href="your-register-link.html" class="button register-button">Top 5 Best Game</a>
+  <a href="https://t.me/your_telegram_channel" class="button telegram-button" target="_blank">Telegram Channel</a>
+</div>
+
+
+
+<script>
+  const historyMap = {};
+  const resultSound = new Audio('/assets/result-sound.mp3'); // path to sound file
+
+  function getDeterministicRandom(input, options) {
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+      hash = input.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const index = Math.abs(hash) % options.length;
+    return options[index];
+  }
+
+  function showResult() {
+    const input = document.getElementById('periodInput');
+    const value = input.value.trim();
+    const popup = document.getElementById('popup');
+
+    popup.style.display = 'block';
+
+    if (value === "") {
+      popup.className = 'popup warning';
+      popup.textContent = "⚠ Please enter a period number!";
+      resultSound.play();  // Warning sound
+      setTimeout(() => {
+        popup.style.display = 'none';
+      }, 3000);
+      return;
+    }
+
+    let result;
+    if (historyMap[value]) {
+      result = historyMap[value];
+    } else {
+      const color = Math.random() < 0.5 ? "red" : "green";
+      const numbers = color === "red" ? [0, 2, 4, 6, 8] : [1, 3, 5, 7, 9];
+      const number = getDeterministicRandom(value, numbers);
+      result = { color, number };
+      historyMap[value] = result;
+    }
+
+    popup.className = `popup ${result.color}`;
+    popup.textContent = `${result.color.toUpperCase()} - ${result.number}`;
+    resultSound.play();  // Result sound
+
+    setTimeout(() => {
+      popup.style.display = 'none';
+      input.value = "";
+    }, 3000);
+  }
+
+  // 🎇 Animated background using canvas
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  let particles = [];
+
+  function initCanvas() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    particles = [];
+    for (let i = 0; i < 100; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 2 + 1,
+        dx: (Math.random() - 0.5) * 0.5,
+        dy: (Math.random() - 0.5) * 0.5,
+        alpha: Math.random()
+      });
+    }
+  }
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, false);
+      ctx.fillStyle = `rgba(0, 255, 200, ${p.alpha})`;
+      ctx.fill();
+
+      p.x += p.dx;
+      p.y += p.dy;
+
+      if (p.x < 0 || p.x > w) p.dx *= -1;
+      if (p.y < 0 || p.y > h) p.dy *= -1;
+    });
+    requestAnimationFrame(drawParticles);
+  }
+
+  window.addEventListener('resize', initCanvas);
+  initCanvas();
+  drawParticles();
+</script>
+
+</body>
+</html>
