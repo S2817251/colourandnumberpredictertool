@@ -1,327 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Color and Number Predictor</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color & Number Predictor</title>
   <style>
     * {
       margin: 0;
       padding: 0;
+      font-family: 'Segoe UI', sans-serif;
       box-sizing: border-box;
     }
 
-    html, body {
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
     body {
-      position: relative;
-      background: #0f0f0f;
-      color: white;
+      background: linear-gradient(-45deg, #1f1c2c, #928dab, #2c3e50, #4ca1af);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: #fff;
+      padding: 20px;
+      min-height: 100vh;
     }
 
-    canvas#bgCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 0;
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     .container {
-      position: relative;
-      z-index: 1;
-      height: 100%;
+      max-width: 400px;
+      width: 100%;
+      margin: auto;
+      background: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      color: #000;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      margin-bottom: 120px;
+    }
+
+    .top-section {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding: 40px 20px;
+      margin-bottom: 15px;
     }
 
-    h1 {
-      font-size: 1.8rem;
+    .top-section img {
+      width: 60px;
+      height: 60px;
+      border-radius: 15px;
+      border: 2px solid #444;
+    }
+
+    .top-section .welcome {
+      margin-left: 10px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    h2 {
       text-align: center;
-      background: linear-gradient(90deg, #00ffe1, #ff00b8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 20px;
+      color: red;
+      font-size: 18px;
+      margin-bottom: 15px;
     }
-
-    .logo {
-  width: 100px;
-  height: 100px;
-  background: url('logo.png') no-repeat center;
-  background-size: cover;
-  border-radius: 50%;
-  margin-bottom: 25px;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4); /* Light shadow for a glowing effect */
-  border: 5px solid #00ffb3; /* Green border around the logo */
-  transition: all 0.3s ease-in-out; /* Smooth transition for hover effect */
-}
-
-.logo:hover {
-  box-shadow: 0 0 25px rgba(0, 255, 179, 0.7); /* Hover glow effect */
-  border: 5px solid #00b3ff; /* Hover border color change */
-}
-
 
     input {
       width: 100%;
-      max-width: 300px;
-      padding: 14px;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 15px;
       border-radius: 10px;
-      font-size: 1rem;
-      border: none;
+      border: 1px solid #ccc;
       outline: none;
-      background: #222;
-      color: #00ffb3;
-      text-align: center;
-      margin-bottom: 20px;
-      box-shadow: inset 0 0 5px #00ffb3;
     }
-
 
     button {
       width: 100%;
-      max-width: 300px;
-      padding: 14px;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: bold;
-      background: linear-gradient(90deg, #00ffc3, #00b3ff);
-      color: #000;
+      padding: 12px;
+      font-size: 16px;
+      background: green;
+      color: white;
       border: none;
+      border-radius: 10px;
+      margin-bottom: 15px;
       cursor: pointer;
-      transition: 0.3s ease;
+      transition: background 0.3s;
     }
 
     button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px rgba(0,255,200,0.5);
+      background: #006400;
     }
 
-    /* Same button style as Result button */
-.button-container {
-  display: flex;
-  flex-direction: column;  /* Stack buttons vertically */
-  gap: 20px; /* Space between the buttons */
-  margin-top: 40px; /* Space from the result button */
-  justify-content: center;
-  align-items: center;
-}
-
-.button {
-  width: 100%;
-  max-width: 300px;
-  padding: 14px;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: bold;
-  background: linear-gradient(90deg, #00ffc3, #00b3ff);
-  color: #000;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s ease;
-  text-align: center;
-  text-decoration: none;
-}
-
-.button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(0,255,200,0.5);
-}
-
-/* Register Button Custom Style */
-.register-button {
-  background: linear-gradient(90deg, #00b3ff, #00ffb3);
-  border: 2px solid #00ff99;
-}
-
-.register-button:hover {
-  background: linear-gradient(90deg, #00ff99, #00ccff);
-}
-
-/* Telegram Button Custom Style */
-.telegram-button {
-  background: linear-gradient(90deg, #00b3ff, #00ffb3);
-  border: 2px solid #00ff99;
-}
-
-.telegram-button:hover {
-  background: linear-gradient(90deg, #00ff99, #00ccff);
-}
-
-
-    .popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      min-width: 260px;
-      max-width: 90%;
-      padding: 20px 30px;
-      border-radius: 15px;
-      font-size: 1.8rem;
-      font-weight: bold;
+    .result-box {
       text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 10px;
+      background: #eee;
+      color: #000;
       display: none;
-      z-index: 1000;
-      animation: slideIn 0.5s ease-out;
-      box-shadow: 0 0 20px rgba(0,0,0,0.6);
-      background: rgba(0, 0, 0, 0.8);
+      margin-bottom: 15px;
+    }
+
+    .use-predictor {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 500;
+      color: #fff;
+      background-color: #333;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .bottom-links {
+      position: fixed;
+      bottom: 10px;
+      left: 0;
+      width: 100%;
+      padding: 0 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 999;
+    }
+
+    .bottom-links button {
+      background: #007bff;
       color: white;
-      border: 2px solid transparent;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
     }
 
-    .popup.red {
-      border-color: #ff0000;
-      color: #ff4c4c;
-      box-shadow: 0 0 15px #ff4c4c;
-    }
-
-    .popup.green {
-      border-color: #00ff00;
-      color: #00ff66;
-      box-shadow: 0 0 15px #00ff66;
-    }
-
-    .popup.warning {
-      border-color: #ffaa00;
-      color: #ffaa00;
-      box-shadow: 0 0 15px #ffaa00;
-    }
-
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translate(-50%, -60%);
-      }
-      to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-      }
+    .bottom-links button:hover {
+      background: #0056b3;
     }
   </style>
 </head>
 <body>
 
-<canvas id="bgCanvas"></canvas>
+  <div class="container">
+    <div class="top-section">
+      <img src="logo.png" alt="Logo" />
+      <div class="welcome">Welcome to our predicter app! Enter your period number and click start.</div>
+    </div>
 
-<div class="container">
-  <h1>COLOUR AND NUMBER PREDICTER</h1>
-  <div class="logo"></div>
+    <h2>COLOUR & NUMBER PREDEICTER</h2>
 
-  <input type="text" id="periodInput" placeholder="Enter Period Number" />
-  <button onclick="showResult()">Result</button>
+    <input type="number" id="periodInput" placeholder="Enter Period Number" />
 
-  <div id="popup" class="popup"></div>
+    <div class="result-box" id="resultBox"></div>
 
-<br><br><br>
-<!-- Register and Telegram Buttons Section -->
-<div class="button-container">
-  <a href="your-register-link.html" class="button register-button">Top 5 Best Game</a>
-  <a href="https://t.me/your_telegram_channel" class="button telegram-button" target="_blank">Telegram Channel</a>
-</div>
+    <button onclick="showResult()">Start</button>
 
+    <div class="use-predictor">
+        You can use this predictor for any platform. Like: 91club, big daddy, 51game.
+    </div>
+  </div>
 
+  <div class="bottom-links">
+    <button onclick="window.open('https://linkopen19.github.io/BestGameLink/')">Top 5 Best Platform</button>
+    <button onclick="window.open('https://linkopen19.github.io/LinkOpener/colourpredictiontoolschannel.html')">Telegram Channel</button>
+  </div>
 
-<script>
-  const historyMap = {};
-  const resultSound = new Audio('/assets/result-sound.mp3'); // path to sound file
+  <script>
+    const resultBox = document.getElementById('resultBox');
+    const periodInput = document.getElementById('periodInput');
+    const resultsMap = {};
 
-  function getDeterministicRandom(input, options) {
-    let hash = 0;
-    for (let i = 0; i < input.length; i++) {
-      hash = input.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    const index = Math.abs(hash) % options.length;
-    return options[index];
-  }
+    function showResult() {
+      const period = periodInput.value.trim();
 
-  function showResult() {
-    const input = document.getElementById('periodInput');
-    const value = input.value.trim();
-    const popup = document.getElementById('popup');
+      if (period === '') {
+        resultBox.style.display = 'block';
+        resultBox.innerText = '⚠ Please enter a period number!';
+        resultBox.style.backgroundColor = '#eee'; // Default background color
+        setTimeout(() => {
+          resultBox.style.display = 'none';
+        }, 3000);
+        return;
+      }
 
-    popup.style.display = 'block';
+      if (!resultsMap[period]) {
+        const color = Math.random() > 0.5 ? 'Red' : 'Green';
+        const evenNums = [0, 2, 4, 6, 8];
+        const oddNums = [1, 3, 5, 7, 9];
+        const number = color === 'Red'
+          ? evenNums[Math.floor(Math.random() * evenNums.length)]
+          : oddNums[Math.floor(Math.random() * oddNums.length)];
+        resultsMap[period] = `${color} ${number}`;
+      }
 
-    if (value === "") {
-      popup.className = 'popup warning';
-      popup.textContent = "⚠ Please enter a period number!";
-      resultSound.play();  // Warning sound
+      resultBox.innerText = `Result: ${resultsMap[period]}`;
+      resultBox.style.display = 'block';
+
+      // Set background color based on result
+      resultBox.style.backgroundColor = resultsMap[period].includes('Red') ? 'red' : 'green';
+      resultBox.style.color = 'white';  // To make the text readable
+
       setTimeout(() => {
-        popup.style.display = 'none';
+        resultBox.style.display = 'none';
+        periodInput.value = '';
       }, 3000);
-      return;
     }
-
-    let result;
-    if (historyMap[value]) {
-      result = historyMap[value];
-    } else {
-      const color = Math.random() < 0.5 ? "red" : "green";
-      const numbers = color === "red" ? [0, 2, 4, 6, 8] : [1, 3, 5, 7, 9];
-      const number = getDeterministicRandom(value, numbers);
-      result = { color, number };
-      historyMap[value] = result;
-    }
-
-    popup.className = `popup ${result.color}`;
-    popup.textContent = `${result.color.toUpperCase()} - ${result.number}`;
-    resultSound.play();  // Result sound
-
-    setTimeout(() => {
-      popup.style.display = 'none';
-      input.value = "";
-    }, 3000);
-  }
-
-  // 🎇 Animated background using canvas
-  const canvas = document.getElementById('bgCanvas');
-  const ctx = canvas.getContext('2d');
-  let w, h;
-  let particles = [];
-
-  function initCanvas() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-    particles = [];
-    for (let i = 0; i < 100; i++) {
-      particles.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        r: Math.random() * 2 + 1,
-        dx: (Math.random() - 0.5) * 0.5,
-        dy: (Math.random() - 0.5) * 0.5,
-        alpha: Math.random()
-      });
-    }
-  }
-
-  function drawParticles() {
-    ctx.clearRect(0, 0, w, h);
-    particles.forEach(p => {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, false);
-      ctx.fillStyle = `rgba(0, 255, 200, ${p.alpha})`;
-      ctx.fill();
-
-      p.x += p.dx;
-      p.y += p.dy;
-
-      if (p.x < 0 || p.x > w) p.dx *= -1;
-      if (p.y < 0 || p.y > h) p.dy *= -1;
-    });
-    requestAnimationFrame(drawParticles);
-  }
-
-  window.addEventListener('resize', initCanvas);
-  initCanvas();
-  drawParticles();
-</script>
+  </script>
 
 </body>
 </html>
